@@ -35,15 +35,17 @@ int main( int argc, char** argv ) {
       return 1;
    }
    
-//#ifndef CONFIG_FAST
-//   logs::register_logger( "print_webgraph", logs::LEVEL_MAX );
-//#endif
-
-   string name = argv[1];
+#ifndef CONFIG_FAST
+   logs::register_logger( "print_webgraph", logs::LEVEL_MAX );
+#endif
+   cout << "# " << string(argv[1]) << endl;
+   string name = string(argv[1]);
 
    typedef boost::shared_ptr<graph> graph_ptr;
 
-   graph_ptr gp = graph::load( name );
+   //graph_ptr gp = graph::load( name );
+   graph_ptr gp = graph::load_sequential( name );
+   //graph_ptr gp = graph::load( argv[1] );
    
 //   cerr << "about to try to get node iterator.\n";
    
@@ -51,10 +53,10 @@ int main( int argc, char** argv ) {
    
    tie(n, n_end) = gp->get_node_iterator( 0 );
    
-   cerr << "num vertices:\n";
+   cerr << "# num vertices: ";
    cerr << gp->get_num_nodes() << endl;
 
-   cerr << "here are vertices:\n";
+   cerr << "# here are vertices:\n";
    
    while( n != n_end ) {
        webgraph::bv_graph::graph::successor_iterator succ, succ_end;
@@ -62,6 +64,7 @@ int main( int argc, char** argv ) {
        tie( succ, succ_end ) = successors( n );
 //       vector<int> succ = successor_vector( n );
       
+       /*
        cerr << "outdegree : " << outdegree(n) << endl;
 
        cerr << "********************   " << *n << "\n";
@@ -70,8 +73,15 @@ int main( int argc, char** argv ) {
          cerr << *succ << " ";
          ++succ;
       }
-      
-      cerr << endl;
+       */
+
+       cerr << *n;
+       while( succ != succ_end ) {
+         cerr << " " << *succ;
+         ++succ;
+       }
+
+       //       cerr << endl;
 
 //       copy( succ.begin(), succ.end(), ostream_iterator<int>(cerr, " " ) );
 //       if( succ.size() > 0 ) 
